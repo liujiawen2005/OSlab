@@ -1,0 +1,6 @@
+# Generated build files
+/code/bin/
+/code/obj/
+
+# Keep experiment screenshots locally
+/report/images/
