@@ -176,6 +176,12 @@ Total Score: 20/20
 [Test 2] Best-Fit: PASS
 ```
 
+### 编译与自动评分截图
+
+下图记录了 `make clean`、`make` 和 `make grade` 的执行过程：内核完成编译与镜像生成，Page Init 和 Best-Fit 两项检查均显示 OK，总分为 `20/20`。
+
+![Lab2 编译与自动评分结果](./images/lab2-build-grade.png)
+
 ---
 
 ## 八、实验中遇到的问题
