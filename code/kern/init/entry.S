@@ -36,7 +36,13 @@ kern_entry:
     lui sp, %hi(bootstacktop)
 
     # 我们在虚拟内存空间中：随意跳转到虚拟地址！
-    # 跳转到 kern_init
+    # 1. 使用临时寄存器 t1 计算栈顶的精确地址
+    lui t1, %hi(bootstacktop)
+    addi t1, t1, %lo(bootstacktop)
+    # 2. 将精确地址一次性地、安全地传给 sp
+    mv sp, t1
+    # 现在栈指针已经完美设置，可以安全地调用任何C函数了
+    # 然后跳转到 kern_init (不再返回)
     lui t0, %hi(kern_init)
     addi t0, t0, %lo(kern_init)
     jr t0
@@ -50,19 +56,18 @@ bootstack:
     .global bootstacktop
 bootstacktop:
 
-.section .data
-    # 由于我们要把这个页表放到一个页里面，因此必须 12 位对齐
+    # a page table for Sv39
     .align PGSHIFT
     .global boot_page_table_sv39
 # 分配 4KiB 内存给预设的三级页表
 boot_page_table_sv39:
-    # 恒等映射：虚拟 0x80000000-0xbfffffff -> 物理 0x80000000-0xbfffffff (VPN2=2)
-    # 用于 satp 切换后、跳转到虚拟地址前，物理地址处的取指仍可执行
+    # VPN[2]=2: VA 0x80000000 -> PA 0x80000000
+    # satp 生效后 PC 仍停在物理地址，需要这段恒等映射才能继续取指，
+    # 随后再跳到高半区的 kern_init。
     .zero 8 * 2
     .quad (0x80000 << 10) | 0xcf # VRWXAD
     .zero 8 * 508
-    # 0xffffffff_c0000000 map to 0x80000000 (1G)
-    # 设置最后一个页表项，PPN=0x80000，标志位 VRWXAD 均为 1
+    # VPN[2]=511: VA 0xffffffffc0000000 -> PA 0x80000000 (1G)
     .quad (0x80000 << 10) | 0xcf # VRWXAD
 
     .global boot_hartid
