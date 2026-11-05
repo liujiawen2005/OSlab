@@ -10,7 +10,7 @@
 | **代码分支** | [OSlab / lab3](https://github.com/liujiawen2005/OSlab/tree/lab3) |
 | **代码目录** | [code/](https://github.com/liujiawen2005/OSlab/tree/lab3/code) |
 | **代码核对版本** | `a0328e83e96526f84ab6c1d4d6c2ee8226ea0e38` |
-| **演示评分** | 所提供截图显示 `Total Score: 100/100` |
+| **演示评分** |  `Total Score: 100/100` |
 
 ### 小组分工
 
